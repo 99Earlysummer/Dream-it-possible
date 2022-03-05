@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dream.blog.mapper.FileMapper">
+	<resultMap id="filemodel" type="com.dream.blog.domain.entity.FileList">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <result column="key" property="key" jdbcType="VARCHAR"/>
+        <result column="hash" property="hash" jdbcType="VARCHAR"/>
+        <result column="fsize" property="fsize" jdbcType="VARCHAR"/>
+        <result column="mimeType" property="mimeType" jdbcType="VARCHAR"/>
+        <result column="putTime" property="putTime" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="scope" property="scope" jdbcType="VARCHAR"/>
+        <result column="suffix" property="suffix" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getAll" resultMap="filemodel">
+        select * from blog_file_list 
+    </select>
+	<select id="getByKey" resultMap="filemodel">
+        select * from blog_file_list where `key` =#{key}
+    </select>
+	<select id="getByKeys" resultMap="filemodel">
+        select * from blog_file_list where 1=1
+		<if test="keys.size() > 0">
+			and id IN
+			<foreach collection="keys" item="key" index="index" open="(" close=")" separator=",">
+				#{key}
+			</foreach>
+		</if>
+    </select>
+     <insert id="saveFile" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="com.dream.blog.domain.entity.FileList">
+		 <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			 SELECT LAST_INSERT_ID()  as id
+		 </selectKey>
+		  insert into blog_file_list (`key`,`hash`,fsize,mimeType,putTime,url,`scope`,suffix)
+		  values (#{key},#{hash},#{fsize},#{mimeType},now(),#{url},#{scope},#{suffix})
+	</insert>
+</mapper>

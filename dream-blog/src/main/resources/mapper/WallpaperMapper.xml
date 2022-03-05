@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dream.blog.mapper.WallPaperMapper">
+    <resultMap id="wallpaper" type="com.dream.blog.domain.dto.WallpaperItem">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="imgSrc" property="imgSrc" jdbcType="VARCHAR"/>
+        <result column="createOn" property="createOn" jdbcType="TIMESTAMP"/>
+        <result column="updateOn" property="updateOn" jdbcType="TIMESTAMP"/>
+        <result column="isDeleted" property="isDeleted" jdbcType="INTEGER"/>
+     </resultMap>
+    
+    <sql id="Base_Column_List">
+		a.id,a.title,a.imgSrc,a.createOn,a.updateOn,a.isDeleted
+	</sql>
+	<sql id="Where_Clause" >
+	    <where >
+	        a.isDeleted =0	 
+	     	<if test="title!= null">
+	      		and a.title like concat('%',#{title},'%')
+	      	</if>
+	      	
+	    </where>
+	 </sql>
+    <!--分页获取文章-->
+    <select id="getWallpaperList" resultMap="wallpaper">
+        select 
+        <include refid="Base_Column_List" />
+        from blog_wallpaper a 
+       <include refid="Where_Clause" />
+        order by a.updateOn desc
+    </select>
+    <select id="getById" resultMap="wallpaper">
+        select 
+        <include refid="Base_Column_List" />
+        from blog_wallpaper a
+        where a.id= #{wallpaperId} and a.isDeleted =0	 
+    </select>
+    <select id="getRandomItem" resultMap="wallpaper">
+        select
+        <include refid="Base_Column_List" />
+        from blog_wallpaper a
+        where  a.isDeleted =0 ORDER BY RAND() LIMIT 1
+    </select>
+
+
+     <insert id="saveWallpaper">
+		  insert into blog_wallpaper (title,imgSrc,isDeleted,createOn,updateOn)
+		  values (#{title},#{imgSrc},#{isDeleted},#{createOn},#{updateOn})
+	</insert>
+	<update id="updateWallpaper">
+		  update wallpaper
+		  set title = #{title},imgSrc = #{imgSrc},updateOn=#{updateOn}
+		  where id = #{id}
+	</update>
+	<update id="deletewallpaper">
+		  update blog_wallpaper set  isDeleted=1,updateOn=NOW() where id = #{wallpaperId}
+	</update>
+</mapper>

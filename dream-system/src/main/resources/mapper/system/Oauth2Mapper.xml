@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dream.system.mapper.Oauth2Mapper">
+    <resultMap id="oauth2Client" type="com.dream.common.core.domain.entity.Oauth2Client">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <result column="clientId" property="clientId" jdbcType="VARCHAR"/>
+        <result column="clientSecret" property="clientSecret" jdbcType="VARCHAR"/>
+        <result column="redirectUrl" property="redirectUrl" jdbcType="VARCHAR"/>
+        <result column="grantType" property="grantType" jdbcType="INTEGER"/>
+        <result column="scope" property="scope" jdbcType="BOOLEAN"/>
+    </resultMap>
+    <select id="getOauth2ClientByClientId" resultMap="oauth2Client">
+        select * from oauth2_client where clientId = #{clientId}
+    </select>
+</mapper>

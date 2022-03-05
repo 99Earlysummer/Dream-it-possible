@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dream.blog.mapper.TagMapper">
+	<resultMap id="tagmodel" type="com.dream.blog.domain.entity.Tag">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <result column="tagName" property="tagName" jdbcType="VARCHAR"/>
+        <result column="aliasName" property="aliasName" jdbcType="VARCHAR"/>
+        <result column="color" property="color" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getAll" resultMap="tagmodel">
+        select * from blog_tag 
+    </select>
+	<select id="getTagByName" resultMap="tagmodel">
+        select * from blog_tag 
+		<where>
+			<if test="tagName!=null || tagName!=''">
+				and tagName like concat('%',#{tagName},'%')
+			</if>
+		</where>
+    </select>
+	<select id="getTagByIds" resultMap="tagmodel">
+        select * from blog_tag where 1=1
+		<if test="tagIds.size() > 0">
+			and id IN
+			<foreach collection="tagIds" item="id" index="index" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</if>
+    </select>
+     <insert id="saveTag" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="com.dream.blog.domain.dto.TagItem">
+		 <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			 SELECT LAST_INSERT_ID()  as id
+		 </selectKey>
+		  insert into  blog_tag (tagName,aliasName,color)
+		  values (#{name},#{name},#{color})
+	</insert>
+	<update id="updateTag">
+		  update blog_tag 
+		  <set>
+			  <if test="name!= null and name !=''">
+			      	tagName = #{tagName},
+			  </if>
+			  <if test="name!= null and name !=''">
+			  		aliasName = #{aliasName},
+			  </if>
+			  <if test="color!= null and color !=''">
+		  			color=#{color},
+			  </if>
+		  </set>
+			where id = #{id}
+	</update>
+	<update id="deleteTag">
+		  delete from blog_tag  where id = #{tagId}
+	</update>
+</mapper>
