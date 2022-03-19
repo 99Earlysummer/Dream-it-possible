@@ -24,9 +24,9 @@ public class DreamApplication
         // System.setProperty("spring.devtools.restart.enabled", "false");
         Instant inst1 = Instant.now();
         SpringApplication.run(DreamApplication.class, args);
-        log.info(":: 启动成功!耗时:{}秒 ::", Duration.between(inst1, Instant.now()).getSeconds());
-        String pwd = SecurityUtils.encryptPassword("123456");
-        System.out.println("加密后的登录密码是："+pwd+",\r\n明文密码是:123456");
+//        log.info(":: 启动成功!耗时:{}秒 ::", Duration.between(inst1, Instant.now()).getSeconds());
+//        String pwd = SecurityUtils.encryptPassword("123456");
+//        System.out.println("加密后的登录密码是："+pwd+",\r\n明文密码是:123456");
 
     }
 }

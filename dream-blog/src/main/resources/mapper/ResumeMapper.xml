@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dream.blog.mapper.ResumeMapper">
+    <resultMap id="Resume" type="com.dream.blog.domain.dto.ResumeItem">
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="INTEGER"/>
+        <result column="birth" property="birth" jdbcType="VARCHAR"/>
+        <result column="shengXiao" property="shengXiao" jdbcType="VARCHAR"/>
+        <result column="xingZhuo" property="xingZhuo" jdbcType="VARCHAR"/>
+        <result column="weight" property="weight" jdbcType="DOUBLE"/>
+        <result column="height" property="height" jdbcType="DOUBLE"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="provinceCode" property="provinceCode" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="cityCode" property="cityCode" jdbcType="VARCHAR"/>
+        <result column="county" property="county" jdbcType="VARCHAR"/>
+        <result column="countyCode" property="countyCode" jdbcType="VARCHAR"/>
+        <result column="school" property="school" jdbcType="VARCHAR"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="wanted" property="wanted" jdbcType="VARCHAR"/>
+        <result column="headImage" property="headImage" jdbcType="VARCHAR"/>
+        <result column="photos" property="photos" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="createOn" property="createOn" jdbcType="TIMESTAMP"/>
+        <result column="updateOn" property="updateOn" jdbcType="TIMESTAMP"/>
+     </resultMap>
+    <resultMap id="ResumeShare" type="com.dream.blog.domain.dto.ResumeShareItem">
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="INTEGER"/>
+        <result column="birth" property="birth" jdbcType="VARCHAR"/>
+        <result column="shengXiao" property="shengXiao" jdbcType="VARCHAR"/>
+        <result column="xingZhuo" property="xingZhuo" jdbcType="VARCHAR"/>
+        <result column="weight" property="weight" jdbcType="DOUBLE"/>
+        <result column="height" property="height" jdbcType="DOUBLE"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="provinceCode" property="provinceCode" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="cityCode" property="cityCode" jdbcType="VARCHAR"/>
+        <result column="county" property="county" jdbcType="VARCHAR"/>
+        <result column="countyCode" property="countyCode" jdbcType="VARCHAR"/>
+        <result column="school" property="school" jdbcType="VARCHAR"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="wanted" property="wanted" jdbcType="VARCHAR"/>
+        <result column="headImage" property="headImage" jdbcType="VARCHAR"/>
+        <result column="photos" property="photos" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        uuid,`name`,sex,birth,phone,photos,height,weight,description,school,company,wanted,province,city,county,provinceCode,cityCode,countyCode
+	</sql>
+    <sql id="share_Column_List">
+        `name`,sex,birth,phone,photos,height,weight,description,school,company,wanted,province,city,county
+    </sql>
+	<sql id="Where_Clause" >
+	    <where >
+            status=1
+	     	<if test="name!= null">
+	      		and `name` like concat('%',#{name},'%')
+	      	</if>
+            <if test="sex!= null">
+                and sex=#{sex}
+            </if>
+            <if test="startAge!= null">
+                and age>#{startAge}
+            </if>
+            <if test="endAge!= null">
+                and age>#{endAge}
+            </if>
+	    </where>
+	 </sql>
+    <!--分页-->
+    <select id="getList" resultMap="Resume">
+        select 
+        <include refid="Base_Column_List" />
+        from blog_resume
+       <include refid="Where_Clause" />
+    </select>
+    <select id="getByUuid" resultMap="Resume">
+        select 
+        <include refid="Base_Column_List" />
+        from blog_resume
+        where uuid= #{uuid} and status=1
+    </select>
+    <select id="getByShareCode" resultMap="ResumeShare">
+        select
+        <include refid="share_Column_List" />
+        from blog_resume
+        where gid= #{gid} and status=1
+    </select>
+     <insert id="saveResume">
+		  insert into blog_resume (uuid,name,sex,birth,phone,photos,height,weight,description,school,company,wanted,province,provinceCode,city,cityCode,county,countyCode,status,createOn,updateOn)
+		  values (#{uuid},#{name},#{sex},#{birth},#{phone},#{photos},#{height},#{weight},#{description},#{school},#{company},#{wanted},#{province},#{provinceCode},#{city},#{cityCode},#{county},#{countyCode},1,#{createOn},#{updateOn})
+	</insert>
+	<update id="updateResume">
+		  update blog_resume
+		  set name = #{name},sex = #{sex},birth = #{birth},phone = #{phone},photos=#{photos},height=#{height},weight=#{weight},
+		      description=#{description},school=#{school},company=#{company},wanted=#{wanted},
+		      province=#{province},city=#{city},county=#{county},
+		      provinceCode=#{provinceCode},cityCode=#{cityCode},countyCode=#{countyCode},
+		      updateOn=NOW()
+		  where uuid = #{uuid}
+	</update>
+    <update id="updateResumeShareCode">
+        update blog_resume
+        set gid = #{gid}
+        where uuid = #{uuid}
+    </update>
+	<update id="deleteResume">
+		  update blog_resume set  status=0,updateOn=NOW() where uuid = #{uuid}
+	</update>
+</mapper>

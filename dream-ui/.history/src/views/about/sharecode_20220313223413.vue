@@ -1,0 +1,62 @@
+<!--
+ * @Description: file content
+ * @Author: your name
+ * @Date: 2022-03-12 16:53:26
+ * @LastEditors: your name
+ * @LastEditTime: 2022-03-13 22:33:54
+-->
+<script>
+import { ResumeApi } from "@/api/blog";
+import VueQr from 'vue-qr'
+import {
+  Form,
+  Cell,
+  CellGroup,
+  Button,
+  Divider,
+
+} from "vant";
+export default {
+  components: {
+    [Button.name]: Button,
+    [Form.name]: Form,
+    [Cell.name]: Cell,
+    [CellGroup.name]: CellGroup,
+    [Divider.name]: Divider,
+    VueQr,
+  },
+  data() {
+    return {
+
+    };
+  },
+  created() {
+    if (this.$route.query.uuid) {
+      this.uuid = this.$route.query.uuid;
+      this.initDetail(this.uuid);
+    }
+  },
+  methods: {
+    initDetail(uuid) {
+     
+    },
+
+  },
+};
+</script>
+<template>
+  <div>
+    <vue-qr ref="Qrcode" :text="qrCode.text" :logoSrc="qrCode.logo" qid="testQrId"></vue-qr>
+    <van-divider dashed></van-divider>
+  </div>
+</template>
+<style scoped>
+ .custom-indicator {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    padding: 2px 5px;
+    font-size: 12px;
+    background: rgba(0, 0, 0, 0.1);
+  }
+</style>

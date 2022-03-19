@@ -55,6 +55,24 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: "/resume",
+    name: "resume",
+    component: resolve => require(["@/views/about/resume"], resolve),
+    hidden: true
+  },
+  {
+    path: "/shareme",
+    name: "shareme",
+    component: resolve => require(["@/views/about/shareme"], resolve),
+    hidden: true
+  },
+  {
+    path: "/sc",
+    name: "sc",
+    component: resolve => require(["@/views/about/sharecode"], resolve),
+    hidden: true
+  },
+  {
     path: "/404",
     component: resolve => require(["@/views/error/404"], resolve),
     hidden: true
